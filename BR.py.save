@@ -1,0 +1,35 @@
+import pigpio
+import time
+import numpy as np
+import os
+
+#os.system('sudo pigpiod')
+gpio = pigpio.pi()
+servo = 12
+slow = 1
+fast = 5
+
+#maximum 1250000
+#minimum 250000
+
+upperlim = 90000
+lowerlim = 75000
+speed = int(input("Enter the SPeed:"))
+
+sum = 0
+count = 0
+try:
+    while True:
+        t0 = time.time()
+        for dc in np.arange(lowerlim,upperlim,speed):
+            gpio.hardware_PWM(servo,50,dc)
+        for dc in np.arange(upperlim,lowerlim,-1*speed):
+            gpio.hardware_PWM(servo,50,dc)
+        duration = time.time() - t0
+        print("Time taken for one revolution: " + str(duration))
+        sum +=duration
+        
+except KeyboardInterupt:
+    gpio.hardware_PWM(servo,0,0)
+
+
